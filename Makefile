@@ -10,7 +10,8 @@ LIBS = -L. -lft -lftprintf
 NAME = libftprintf.a
 
 SRCS += ft_printf.c \
-		print_alpha.c
+		print_alpha.c \
+		print_hexa.c
 
 OBJS += $(SRCS:.c=.o)
 DEPS += $(SRCS:.c=.d)
@@ -28,11 +29,11 @@ $(NAME)	:	$(LIBFT) $(OBJS)
 	ar crs $(NAME) $(OBJS)
 
 clean	:                 
-		rm -f $(OBJS) $(DEPS)
+		rm -f $(OBJS) $(DEPS) $(LIBFT)
 		$(MAKE) -C ./$(LIBFT_DIR) clean
 
 fclean	:	clean
-		rm -f $(NAME) $(LIBFT)
+		rm -f $(NAME)
 		$(MAKE) -C ./$(LIBFT_DIR) fclean
 		
 re	:	fclean all
@@ -50,16 +51,16 @@ tclean	:	clean
 		rm -f $(NAME) *.d *.o test
 		$(MAKE) -C ./$(LIBFT_DIR) fclean
 
-test : $(NAME) test.c
-	$(CC) $(CFLAGS) -c test.c
+test : 	$(NAME) test.c 
+	$(CC) $(CFLAGS) -c test.c 
 	$(CC) $(CFLAGS) -o test test.o $(OBJS) $(LIBS)
 
-debug :  $(NAME)             ## Permet de debuger le code avec lldb
-	$(CC) $(CFLAGS) -c test.c
-	$(CC) $(DBGFLAGS) -o test test.o $(OBJS) $(LIBS)
-	lldb ./$(NAME)
+debug :	test.c   			## Permet de debuger le code avec lldb
+	$(CC) $(DBGFLAGS) -c test.c $(SRCS)
+	$(CC) $(DBGFLAGS) -o test test.o $(OBJS) $(LIBS) 
+	lldb ./test
 	
-val :  $(NAME)             ## Permet de debuger le code avec lldb
-	$(CC) $(CFLAGS) -c test.c
+val : test.c           	## Permet de trouver les leak avec valgrind
+	$(CC) $(CFLAGS) -c test.c $(SRCS)
 	$(CC) $(DBGFLAGS) -o test test.o $(OBJS) $(LIBS)
 	valgrind --leak-check=full --track-origins=yes -s ./test
