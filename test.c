@@ -6,7 +6,7 @@
 /*   By: dabouab <dabouab@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/30 16:15:49 by dabouab           #+#    #+#             */
-/*   Updated: 2024/06/04 13:17:13 by dabouab          ###   ########.fr       */
+/*   Updated: 2024/06/05 17:29:12 by dabouab          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ int	main(void)
 	char	*p;
 
 	p = &c;
-	
 	// Char %p
 	START("Char \%c");
 	STRTEST;
@@ -151,8 +150,8 @@ int	main(void)
 	// Percent sign %%
 	START("Percent sign \%");
 	STRTEST;
-	reel = printf(BLUE "%%" RESET "\n") - 9;
-	result = ft_printf("%%\n");
+	reel = printf(BLUE " %%   %%   %% " RESET "\n") - 9;
+	result = ft_printf(" %%   %%   %% " "\n");
 	if (result == reel)
 		OK;
 	else 
@@ -173,7 +172,7 @@ Unsigned Decimal: %u\nHexa lower: %x\nHexa upper: %X\nPercent sign : %%" RESET "
 	LINE;
 	result = ft_printf("Char: %c\nString: %s\nPointer: %p\nDecimal: %d\nInterger: %i\n\
 Unsigned Decimal: %u\nHexa lower: %x\nHexa upper: %X\nPercent sign : %%\n", \
-		'c', "This is a test!", p, INT_MIN, INT_MAX, 12345, 1024, 987654);
+		'c', "This is a test!", p, (long)INT_MIN, (long)INT_MAX, 12345, 1024, 987654);
 	if (result == reel)
 		OK;
 	else 
@@ -198,3 +197,27 @@ Unsigned Decimal: %u\nHexa lower: %x\nHexa upper: %X\nPercent sign : %%\n", \
 	}
 	LINE;
 }
+
+// Add in Makefile
+/*
+# ---------------------------------------------------
+
+DBGFLAGS := -g3
+
+tclean	:	clean
+		rm -f $(NAME) *.d *.o test
+
+test : 	$(NAME) test.c
+	$(CC) $(CFLAGS) -c test.c 
+	$(CC) $(CFLAGS) -o test test.o $(OBJS) 
+
+debug :	test.c   			## Permet de debuger le code avec lldb
+	$(CC) $(DBGFLAGS) -c test.c $(SRCS)
+	$(CC) $(DBGFLAGS) -o test test.o $(OBJS)
+	lldb ./test
+	
+val : test.c           	## Permet de trouver les leak avec valgrind
+	$(CC) $(CFLAGS) -c test.c $(SRCS)
+	$(CC) $(DBGFLAGS) -o test test.o $(OBJS)
+	valgrind --leak-check=full --track-origins=yes -s ./test
+*/
